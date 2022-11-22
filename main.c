@@ -7,33 +7,34 @@
 #include <ctype.h>
 #include <dos.h>
 
+
 #define MAX_SENHA 8
 #define MAX_LOGIN 50
 
-struct Clientes {
+typedef struct Clientes {
 int codigo;
 char nome[50];
 char telefone[17];
 char email[30];
 char deletado;
 };
-struct Produto {
+typedef struct Produto {
 int codigo;
 char descricao[50];
 float valor;
 char deletado;
 };
-struct Fornecedores {
+typedef struct Fornecedores {
 int codigo;
 char nome[50];
 char telefone[17];
 char email[30];
 char deletado;
 };
-struct Usuarios {
+typedef struct Usuarios {
 int codigo;
-char nome[50];
-char senha[30];
+char nome[100];
+char senha[100];
 char deletado;
 };
 
@@ -46,7 +47,6 @@ void alterar();
 void consultar();
 void excluir();
 void criptografia();
-char CriaSenha();
 
 int Usuario( FILE* file, char* user, char* senha ) //Verifica se é um usuario valido
 {
@@ -874,24 +874,20 @@ arq = fopen("Usuarios.txt", "rb");
         printf("Arquivo inexistente!");
         system("pause>nul");
         system("cls || clear");
-        montarMenu("Produtos");
+        montarMenu("Usuarios");
     }
     struct Usuarios usuarios;
     int encontrado = 0;
-    char user[50];
-    char senha[30];
+    char user[100];
+    char pass[100];
     printf ("\nDigite o Usuario: \n");
     scanf ("%s", &user);
     printf ("\nDigite a Senha: \n");
-    scanf ("%s", &senha);
-
-    printf ("\nDigite a usuar: %s \n", user);
-    printf ("\nDigite a Senha: %s \n", senha);
+    scanf ("%s", &pass);
     system("pause>nul");
-
     while (fread (&usuarios, sizeof(usuarios), 1, arq))
     {
-       if ((user == usuarios.nome)&&(senha == usuarios.senha)&& (usuarios.deletado != '*'))
+        if (!strcmp(user, usuarios.nome)&&!strcmp(pass, usuarios.senha))
         {
             printf("Login efetuado com sucesso!");
             encontrado = 1;
@@ -900,14 +896,15 @@ arq = fopen("Usuarios.txt", "rb");
             system("cls || clear");
             menuAdministrador();
         }
-    }
-    if (!encontrado)
-    {
+        else
+        {
         printf("\nUsuario nao cadastrado ou senha incorreta!!\n");
         fclose(arq);
         system("pause>nul");
         system("cls || clear");
-
+        banner();
+        return login();
+        }
     }
  }
 
@@ -920,12 +917,12 @@ int main()
     setlocale(LC_ALL,"Portuguese");
     banner();
     system("title PIM - Projeto Integrado Multidisciplinar");
-    system("color 3F");
+    system("color 5F");
     printf("\tVeja todas as funções disponiveis no menu.\n");
     printf("\tUse os numeros para selecionar a opção desejada.\n");
     printf("\tPressione qualquer tecla para continuar ou\n\tEspaço para sair do programa agora.\n\t");
     var=getch();
     if(var == 32){ exit(0);}// 32 corresponde a espaço no teclado conforme Tabela ASCII
     login();
-//    menuAdministrador();
+//menuAdministrador();
 }
